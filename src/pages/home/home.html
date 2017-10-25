@@ -1,14 +1,52 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Ionic AI Intro
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+  <ion-list>
+
+    <ion-item>
+
+      <ion-label>
+        Up
+      </ion-label>
+
+      <ion-checkbox [(ngModel)]="up"></ion-checkbox>
+
+    </ion-item>
+
+    <ion-item>
+
+      <ion-label>
+        Middle
+      </ion-label>
+
+      <ion-checkbox [(ngModel)]="middle"></ion-checkbox>
+
+    </ion-item>
+
+    <ion-item>
+
+      <ion-label>
+        Down
+      </ion-label>
+
+      <ion-checkbox [(ngModel)]="down"></ion-checkbox>
+
+    </ion-item>
+
+  </ion-list>
+
+  <button ion-button (click)="changeButtons(up, middle, down)">
+    Change buttons
+  </button>
+
+  <div *ngFor="let value of output.reverse()">
+    <button ion-button [disabled]="!value"></button>
+  </div>
 </ion-content>
