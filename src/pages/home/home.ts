@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
 
 declare var require;
-var brain = require('brain');
+var synaptic = require('synaptic');
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  net;
   output = [true,true,true,true,true];
+  perceptron;
 
   constructor() {
-    // this.trainXOR();
     this.train();
   }
 
   train() {
+    var  Architect = synaptic.Architect;
 
-    this.net = new brain.NeuralNetwork();
+    this.perceptron = new Architect.Perceptron(3,60,5);
 
     const data = [
       { input: [0, 0, 0], output:[0, 0, 0, 0, 0]},
@@ -29,44 +29,19 @@ export class HomePage {
       { input: [0, 0, 1], output:[0, 0, 0, 0, 1]}
     ];
 
-    this.net.train(data, {
-      errorThresh: 0.005,  // error threshold to reach
-      iterations: 2000000,   // maximum training iterations
-      log: true,           // console.log() progress periodically
-      logPeriod: 1000,       // number of iterations between logging
-      learningRate: 0.1    // learning rate
-    });
-
+    for(let x=0;x< 1000; x++) {
+      data.forEach(this.trainPerceptron);
+    }
   }
 
-  trainXOR() {
-
-    this.net = new brain.NeuralNetwork();
-
-    const data = [
-      { input: [0,0], output: [0]},
-      { input: [0,1], output: [1]},
-      { input: [1,0], output: [1]},
-      { input: [1,1], output: [0]}
-    ];
-
-    this.net.train(data, {
-      errorThresh: 0.005,  // error threshold to reach
-      iterations: 200000,   // maximum training iterations
-      log: true,           // console.log() progress periodically
-      logPeriod: 1000,       // number of iterations between logging
-      learningRate: 0.1    // learning rate
-    });
-
-    console.log(this.net.run([0,0]));
-    console.log(this.net.run([0,1]));
-    console.log(this.net.run([1,0]));
-    console.log(this.net.run([1,1]));
+  trainPerceptron = (info) => {
+    this.perceptron.activate(info.input);
+    this.perceptron.propagate(0.01, info.output);
   }
 
   changeButtons(up, middle, down) {
     const input = [down >>> 0 , middle >>> 0 , up >>> 0];
-    const output = this.net.run(input);
+    const output = this.perceptron.activate(input);
     this.output = this.formatOutput(output);
   }
 
